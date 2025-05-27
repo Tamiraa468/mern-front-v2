@@ -28,7 +28,7 @@ jobs:
       - name: Delete old Docker container
         run: docker rm -f mern-front || true
       - name: Run Docker container
-        run: docker run -d -p 3000:80 --name mern-front tamiraa468/mern-front:latest
+        run: docker run -d -p 3000:3000 --name mern-front tamiraa468/mern-front:latest
       - name: Clean up old Docker images
         if: always()
         run: docker image prune -af
