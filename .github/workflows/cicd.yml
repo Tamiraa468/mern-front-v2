@@ -7,25 +7,24 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout source 
+      - name: Checkout source
         uses: actions/checkout@v4
       - name: Login to DockerHub
         run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
       - name: Build Docker image
-        run: docker build -t myagmarsurenmike/mern-front --build-arg REACT_APP_BASE-URL='${{secrets.REACT_APP_SERVER_BASE_URL}}' .
+        run: docker build -t tamiraa468/mern-front --build-arg REACT_APP_BASE-URL='${{secrets.REACT_APP_SERVER_BASE_URL}}' .
       - name: Publish Docker image
-        run: docker push myagmarsurenmike/mern-front:latest    
+        run: docker push tamiraa468/mern-front:latest
   deploy:
     needs: build
     runs-on: self-hosted
     steps:
       - name: Pull image from DockerHub
-        run: docker pull myagmarsurenmike/mern-front:latest
+        run: docker pull tamiraa468/mern-front:latest
       - name: Delete old Docker container
-        run: docker rm -f mern-front-container || true
+        run: docker rm -f tamiraa468/mern-front || true
       - name: Run Docker container
-        run: docker run -d -p 3000:80 --name mern-front-container myagmarsurenmike/mern-front
+        run: docker run -d -p 3000:80 --name tamiraa468/mern-front tamiraa468/mern-front
       - name: Clean up old Docker images
         if: always()
         run: docker image prune -af
-
