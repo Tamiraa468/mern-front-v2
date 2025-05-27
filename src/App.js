@@ -19,7 +19,7 @@ const App = () => {
     refetchOnMountOrArgChange: false,
     skip: !document.cookie.includes('jwt'), // Skip if no JWT cookie
   });
-
+//gfghjkjhg
   useEffect(() => {
     if (isSuccess && userProfile) {
       dispatch(setCredentials(userProfile));
