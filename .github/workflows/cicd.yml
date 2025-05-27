@@ -10,9 +10,9 @@ jobs:
       - name: Checkout source
         uses: actions/checkout@v4
       - name: Login to DockerHub
-        run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
       - name: Build Docker image
-        run: docker build -t tamiraa468/mern-front --build-arg REACT_APP_BASE-URL='${{secrets.REACT_APP_SERVER_BASE_URL}}' .
+        run: docker build -t tamiraa468/mern-front:latest --build-arg REACT_APP_BASE_URL='${{ secrets.REACT_APP_SERVER_BASE_URL }}' .
       - name: Publish Docker image
         run: docker push tamiraa468/mern-front:latest
   deploy:
@@ -20,11 +20,15 @@ jobs:
     runs-on: self-hosted
     steps:
       - name: Pull image from DockerHub
-        run: docker pull tamiraa468/mern-front:latest
+        run: |
+          if ! docker pull tamiraa468/mern-front:latest; then
+            echo "Failed to pull image"
+            exit 1
+          fi
       - name: Delete old Docker container
-        run: docker rm -f tamiraa468/mern-front || true
+        run: docker rm -f mern-front || true
       - name: Run Docker container
-        run: docker run -d -p 3000:80 --name tamiraa468/mern-front tamiraa468/mern-front
+        run: docker run -d -p 3000:80 --name mern-front tamiraa468/mern-front:latest
       - name: Clean up old Docker images
         if: always()
         run: docker image prune -af
